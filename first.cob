@@ -1,0 +1,10 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. ONE.
+        ENVIRONMENT DIVISION.
+        CONFIGURATION SECTION.
+        DATA DIVISION.
+        FILE SECTION.
+        PROCEDURE DIVISION.
+           DISPLAY "ONE".
+           CALL "second".
+           STOP RUN.

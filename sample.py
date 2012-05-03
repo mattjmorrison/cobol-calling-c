@@ -1,3 +1,3 @@
 
-def mysample():
+def doit():
     print "I'm Python!"

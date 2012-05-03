@@ -10,21 +10,17 @@
         01 PYTHON-ARGS.
                 03 MODULE PIC X(6) VALUE "sample".
                 03 FILLER PIC X VALUE " ".
-                03 FUNC   PIC X(8) VALUE "mysample".
+                03 FUNC   PIC X(4) VALUE "doit".
         01 PIPE   PIC X VALUE '|'.
         01 PRINT-RESULT PIC X(150) VALUE SPACES.
         LINKAGE SECTION.
         01 LINKAGE-DATA.
                 03 RESULT    PIC X(200).
         PROCEDURE DIVISION.
-
             DISPLAY '*********************************'.
             DISPLAY "*         STARTING COBOL        *".
             DISPLAY "*      CALLING C FROM COBOL     *".
             DISPLAY '*********************************'.
-      *    CALL PROCEDURE "getstring"
-      *          USING HELLO-WORLD
-      *          GIVING PRINT-RESULT.
 
             CALL "python"
                 USING PYTHON-ARGS.
@@ -34,13 +30,6 @@
             DISPLAY '*          ', C-STRING-POINTER, "           *".
             DISPLAY '*          ', HELLO-WORLD, '         *'.
             DISPLAY '*********************************'.
-      *      SET ADDRESS OF LINKAGE-DATA TO C-STRING-POINTER.            
-
-      *      STRING 
-      *          PIPE DELIMITED BY SIZE
-      *          RESULT DELIMITED BY SIZE,
-      *          PIPE DELIMITED BY SIZE
-      *          INTO PRINT-RESULT.
             DISPLAY '*********************************'.
             DISPLAY "*         LEAVING COBOL         *".
             DISPLAY '*********************************'.

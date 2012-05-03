@@ -19,33 +19,60 @@ getstring(char *hello, char *world)
 }
 
 int
-getint(char *hello, char *world){
-    printf("HELLO: %s\n", hello);
-    printf("WORLD: %s\n", world);
+getint(char *cobolParams){ // 2 vars PIC X(6)
+    char *first, *second;
+    first = cobolParams + 5;
+    *first = 0;
+    first++;
+    second = cobolParams;
+
+    printf("HELLO: %s\n", first);
+    printf("WORLD: %s\n", second);
     return 12345;
 }
 
+PyObject*
+getPythonModule(char *name){
+    PyObject *pythonModuleName = PyString_FromString(name);
+    PyObject *pythonModule = PyImport_Import(pythonModuleName);
+    Py_DECREF(pythonModuleName);
+    if (pythonModule == NULL) {
+        PyErr_Print();
+        fprintf(stderr, "Failed to load sample\n");
+    }
+    
+    return pythonModule;
+}
+
+void
+callPythonFunction(PyObject *module, char *functionName){
+    PyObject *pythonFunction = PyObject_GetAttrString(module, functionName);
+    PyObject_CallObject(pythonFunction, PyTuple_New(0));
+    Py_DECREF(pythonFunction);
+    Py_DECREF(module);
+}
+
 int
-python(char *moduleName, char *functionName){
+python(char *cobolParams){
+    //TODO write common way to extract COBOL args
+    char *moduleName, *functionName;
+    functionName = cobolParams + 6;
+    *functionName = 0;
+    functionName++;
+    moduleName = cobolParams;
+
     printf("Starting C\n");
     Py_Initialize();
     PyRun_SimpleString(
         "import sys\n"
         "sys.path.append('/Users/mattjmorrison/Projects/coboltest')\n"
     );
-    PyObject *pythonModuleName = PyString_FromString("sample");
-    PyObject *pythonModule = PyImport_Import(pythonModuleName);
-    if (pythonModule != NULL) {
-        Py_DECREF(pythonModuleName);
-        PyObject *pythonFunction = PyObject_GetAttrString(pythonModule, "mysample");
-        PyObject_CallObject(pythonFunction, PyTuple_New(0));
-        Py_DECREF(pythonFunction);
-        Py_DECREF(pythonModule);
+    PyObject *pythonModule = getPythonModule(moduleName);
+    if (pythonModule == NULL) {
+        return 1;
     }
     else {
-        PyErr_Print();
-        fprintf(stderr, "Failed to load sample\n");
-        return 1;
+        callPythonFunction(pythonModule, functionName);
     }
 
     Py_Finalize();

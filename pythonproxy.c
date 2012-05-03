@@ -20,11 +20,35 @@ getstring(char *hello, char *world)
 
 int
 getint(char *hello, char *world){
-    printf("%s\n", hello, world);
+    printf("HELLO: %s\n", hello);
+    printf("WORLD: %s\n", world);
     return 12345;
 }
 
 int
-python(char *hello, char *world){
-    printf("Inside C: %s\n", hello, world);
+python(char *moduleName, char *functionName){
+    printf("Starting C\n");
+    Py_Initialize();
+    PyRun_SimpleString(
+        "import sys\n"
+        "sys.path.append('/Users/mattjmorrison/Projects/coboltest')\n"
+    );
+    PyObject *pythonModuleName = PyString_FromString("sample");
+    PyObject *pythonModule = PyImport_Import(pythonModuleName);
+    if (pythonModule != NULL) {
+        Py_DECREF(pythonModuleName);
+        PyObject *pythonFunction = PyObject_GetAttrString(pythonModule, "mysample");
+        PyObject_CallObject(pythonFunction, PyTuple_New(0));
+        Py_DECREF(pythonFunction);
+        Py_DECREF(pythonModule);
+    }
+    else {
+        PyErr_Print();
+        fprintf(stderr, "Failed to load sample\n");
+        return 1;
+    }
+
+    Py_Finalize();
+    printf("Ending C\n");
+    return 0;
 }

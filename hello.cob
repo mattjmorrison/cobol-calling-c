@@ -7,6 +7,10 @@
         01 HELLO-WORLD.
                 03 HELLO PIC X(6) VALUE "HELLO ".
                 03 WORLD PIC X(6) VALUE "WORLD".
+        01 PYTHON-ARGS.
+                03 MODULE PIC X(6) VALUE "sample".
+                03 FILLER PIC X VALUE " ".
+                03 FUNC   PIC X(8) VALUE "mysample".
         01 PIPE   PIC X VALUE '|'.
         01 PRINT-RESULT PIC X(150) VALUE SPACES.
         LINKAGE SECTION.
@@ -18,9 +22,12 @@
             DISPLAY "*         STARTING COBOL        *".
             DISPLAY "*      CALLING C FROM COBOL     *".
             DISPLAY '*********************************'.
-            CALL "getstring"
-                USING HELLO-WORLD
-                RETURNING C-STRING-POINTER.
+      *    CALL PROCEDURE "getstring"
+      *          USING HELLO-WORLD
+      *          GIVING PRINT-RESULT.
+
+            CALL "python"
+                USING PYTHON-ARGS.
 
             DISPLAY '*********************************'.
             DISPLAY '* BACK IN COBOL AFTER CALLING C *'.
